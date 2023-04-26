@@ -1,0 +1,26 @@
+{
+    "name": "lammensj/property-access",
+    "description": "Provides a mechanism to access data from an object.",
+    "type": "library",
+    "require": {
+        "symfony/property-access": "^6.2",
+        "laravel/helpers": "^1.6",
+        "symfony/expression-language": "^6.2"
+    },
+    "require-dev": {
+        "codeception/specify": "^2.0",
+        "phpunit/phpunit": "^9.5"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Lammensj\\PropertyAccess\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jasper Lammens",
+            "email": "jasper.lammens@dropsolid.com"
+        }
+    ]
+}
