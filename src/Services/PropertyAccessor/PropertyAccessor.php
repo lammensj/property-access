@@ -2,7 +2,7 @@
 
 namespace Lammensj\PropertyAccess\Services\PropertyAccessor;
 
-use Drupal\Core\Utility\Token;
+use Lammensj\PropertyAccess\ElementProcessorType;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -11,22 +11,23 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface as CorePropertyAc
 class PropertyAccessor implements PropertyAccessorInterface {
 
   /**
+   * A collection of processors, grouped by type.
+   *
+   * @var \SplPriorityQueue[]
+   */
+  protected array $processors = [];
+
+  /**
    * Constructs a PropertyAccessor-instance.
    *
-   * @param \Drupal\Core\Utility\Token $token
-   *   The token utility.
    * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface|null $accessor
    *   The property accessor.
    * @param \Symfony\Component\ExpressionLanguage\ExpressionLanguage $language
    *   The expression language.
-   * @param array $tokenData
-   *   The token data.
    */
   public function __construct(
-    protected Token $token,
     protected ?CorePropertyAccessorInterface $accessor = NULL,
-    protected ExpressionLanguage $language = new ExpressionLanguage(),
-    protected array $tokenData = []
+    protected ExpressionLanguage $language = new ExpressionLanguage()
   ) {
     $this->accessor = PropertyAccess::createPropertyAccessor();
   }
@@ -45,8 +46,14 @@ class PropertyAccessor implements PropertyAccessorInterface {
         return $this->dataGetCollection($target, $key, $default);
       }
 
-      // Replace Drupal-tokens before evaluating the expression.
-      $segment = strval($this->token->replace($segment, $this->tokenData));
+      // Allow the segment-preprocessors to do their thing.
+      /** @var \SplPriorityQueue $segmentPreprocessors */
+      $segmentPreprocessors = $this->processors[ElementProcessorType::SEGMENT_PREPROCESS];
+      while ($segmentPreprocessors instanceof \SplPriorityQueue && !$segmentPreprocessors->isEmpty()) {
+        /** @var \Lammensj\PropertyAccess\ElementProcessorInterface $processor */
+        $processor = $segmentPreprocessors->extract();
+        $segment = $processor->process($segment);
+      }
 
       // Determine whether the segment contains a language expression.
       $matches = [];
@@ -67,8 +74,13 @@ class PropertyAccessor implements PropertyAccessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function setTokenData(string $key, mixed $data): void {
-    $this->tokenData[$key] = $data;
+  public function addProcessor(ElementProcessorInterface $processor, ElementProcessorType $type, int $priority = 0): PropertyAccessorInterface {
+    if (empty($this->processors[$type])) {
+      $this->processors[$type] = new \SplPriorityQueue();
+    }
+    $this->processors[$type]->insert($processor, -$priority);
+
+    return $this;
   }
 
   /**

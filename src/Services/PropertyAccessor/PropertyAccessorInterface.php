@@ -2,6 +2,9 @@
 
 namespace Lammensj\PropertyAccess\Services\PropertyAccessor;
 
+use Lammensj\PropertyAccess\ElementProcessorType;
+use Lammensj\PropertyAccess\SegmentProcessorInterface;
+
 interface PropertyAccessorInterface {
 
   /**
@@ -22,13 +25,16 @@ interface PropertyAccessorInterface {
   public function getValue(mixed $target, array|int|null|string $key, $default = NULL): mixed;
 
   /**
-   * Set token data.
+   * Add a processor.
    *
-   * @param string $key
-   *   The key.
-   * @param mixed $data
-   *   The data.
+   * @param \Lammensj\PropertyAccess\ElementProcessorInterface $processor
+   *   The processor.
+   * @param int $priority
+   *   The priority.
+   *
+   * @return \Lammensj\PropertyAccess\Services\PropertyAccessor\PropertyAccessorInterface
+   *   Returns the called object.
    */
-  public function setTokenData(string $key, mixed $data): void;
+  public function addProcessor(ElementProcessorInterface $processor, ElementProcessorType $type, int $priority = 0): PropertyAccessorInterface;
 
 }
