@@ -14,7 +14,8 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Lammensj\\PropertyAccess\\": "src/"
+            "Lammensj\\PropertyAccess\\": "src/",
+            "Lammensj\\PropertyAccess\\Tests\\": "tests/"
         }
     },
     "authors": [
