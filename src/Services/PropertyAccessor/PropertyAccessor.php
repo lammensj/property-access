@@ -48,13 +48,7 @@ class PropertyAccessor implements PropertyAccessorInterface {
       }
 
       // Allow the segment-preprocessors to do their thing.
-      /** @var \SplPriorityQueue $segmentPreprocessors */
-      $segmentPreprocessors = $this->processors[ElementProcessorType::SEGMENT_PREPROCESS];
-      while ($segmentPreprocessors instanceof \SplPriorityQueue && !$segmentPreprocessors->isEmpty()) {
-        /** @var \Lammensj\PropertyAccess\ElementProcessorInterface $processor */
-        $processor = $segmentPreprocessors->extract();
-        $segment = $processor->process($segment);
-      }
+      $this->processElement($segment, ElementProcessorType::SEGMENT_PREPROCESS);
 
       // Determine whether the segment contains a language expression.
       $matches = [];
@@ -83,6 +77,25 @@ class PropertyAccessor implements PropertyAccessorInterface {
     $this->processors[$type->value]->insert($processor, -$priority);
 
     return $this;
+  }
+
+  /**
+   * Process the element for a given type.
+   *
+   * @param string $element
+   *   The element.
+   * @param \Lammensj\PropertyAccess\ElementProcessorType $type
+   *   The type of processing to run.
+   */
+  protected function processElement(string &$element, ElementProcessorType $type): void {
+    if (!empty($this->processors[$type->value])) {
+      $queue = clone $this->processors[$type->value];
+      while (!$queue->isEmpty()) {
+        /** @var \Lammensj\PropertyAccess\ElementProcessorInterface $processor */
+        $processor = $queue->extract();
+        $element = $processor->process($element);
+      }
+    }
   }
 
   /**
