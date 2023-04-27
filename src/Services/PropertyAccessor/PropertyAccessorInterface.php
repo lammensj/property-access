@@ -3,7 +3,7 @@
 namespace Lammensj\PropertyAccess\Services\PropertyAccessor;
 
 use Lammensj\PropertyAccess\ElementProcessorType;
-use Lammensj\PropertyAccess\SegmentProcessorInterface;
+use Lammensj\PropertyAccess\ElementProcessorInterface;
 
 interface PropertyAccessorInterface {
 
@@ -29,6 +29,8 @@ interface PropertyAccessorInterface {
    *
    * @param \Lammensj\PropertyAccess\ElementProcessorInterface $processor
    *   The processor.
+   * @param \Lammensj\PropertyAccess\ElementProcessorType $type
+   *   The type.
    * @param int $priority
    *   The priority.
    *

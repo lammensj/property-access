@@ -2,6 +2,7 @@
 
 namespace Lammensj\PropertyAccess\Services\PropertyAccessor;
 
+use Lammensj\PropertyAccess\ElementProcessorInterface;
 use Lammensj\PropertyAccess\ElementProcessorType;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
