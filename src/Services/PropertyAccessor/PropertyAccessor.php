@@ -75,11 +75,12 @@ class PropertyAccessor implements PropertyAccessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function addProcessor(ElementProcessorInterface $processor, ElementProcessorType $type, int $priority = 0): PropertyAccessorInterface {
-    if (empty($this->processors[$type])) {
-      $this->processors[$type] = new \SplPriorityQueue();
+  public function addProcessor(ElementProcessorInterface $processor, string $type, int $priority = 0): PropertyAccessorInterface {
+    $type = ElementProcessorType::from($type);
+    if (empty($this->processors[$type->value])) {
+      $this->processors[$type->value] = new \SplPriorityQueue();
     }
-    $this->processors[$type]->insert($processor, -$priority);
+    $this->processors[$type->value]->insert($processor, -$priority);
 
     return $this;
   }

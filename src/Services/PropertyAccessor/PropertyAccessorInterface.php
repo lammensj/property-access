@@ -29,7 +29,7 @@ interface PropertyAccessorInterface {
    *
    * @param \Lammensj\PropertyAccess\ElementProcessorInterface $processor
    *   The processor.
-   * @param \Lammensj\PropertyAccess\ElementProcessorType $type
+   * @param string $type
    *   The type.
    * @param int $priority
    *   The priority.
@@ -37,6 +37,6 @@ interface PropertyAccessorInterface {
    * @return \Lammensj\PropertyAccess\Services\PropertyAccessor\PropertyAccessorInterface
    *   Returns the called object.
    */
-  public function addProcessor(ElementProcessorInterface $processor, ElementProcessorType $type, int $priority = 0): PropertyAccessorInterface;
+  public function addProcessor(ElementProcessorInterface $processor, string $type, int $priority = 0): PropertyAccessorInterface;
 
 }

@@ -2,7 +2,7 @@
 
 namespace Lammensj\PropertyAccess;
 
-enum ElementProcessorType {
+enum ElementProcessorType: string {
 
   case SEGMENT_PREPROCESS = 'segment_preprocess';
 
